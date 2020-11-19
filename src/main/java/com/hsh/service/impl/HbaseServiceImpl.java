@@ -9,6 +9,8 @@ import com.hsh.source.Constants;
 import org.apache.hadoop.hbase.TableName;
 import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.util.List;
@@ -24,12 +26,14 @@ import java.util.Map;
 public class HbaseServiceImpl implements IHbaseService {
 
 
-
+    @Autowired
+    @Qualifier(value = "getHbaseConnectionHelper")
+    private HbaseConnectionHelper hbaseConnectionHelper;
 
     @Override
     public HbaseResDTO getByRowkey(String rowKey)  {
 
-       Connection connection = HbaseConnectionHelper.getConnection();
+       Connection connection = hbaseConnectionHelper.getConnection();
 
         String tableName = ConfigurationManager.getProperty(Constants.HBASE_TABLE_NAME);
         String faimlyName = ConfigurationManager.getProperty(Constants.HBASE_FAMILY_NAME);
@@ -77,7 +81,7 @@ public class HbaseServiceImpl implements IHbaseService {
         } catch (IOException e) {
             throw new RuntimeException("表连接关闭失败");
         }
-        HbaseConnectionHelper.close(connection);
+        hbaseConnectionHelper.close(connection);
 
         return hbaseResDTO;
     }
@@ -85,7 +89,7 @@ public class HbaseServiceImpl implements IHbaseService {
     @Override
     public List<String> getColumns(String rowKey)  {
 
-        Connection connection = HbaseConnectionHelper.getConnection();
+        Connection connection = hbaseConnectionHelper.getConnection();
         Get get = new Get(Bytes.toBytes(rowKey));
 
         String tableName = ConfigurationManager.getProperty(Constants.HBASE_TABLE_NAME);
@@ -121,7 +125,7 @@ public class HbaseServiceImpl implements IHbaseService {
         } catch (IOException e) {
             throw new RuntimeException("表连接关闭失败");
         }
-        HbaseConnectionHelper.close(connection);
+        hbaseConnectionHelper.close(connection);
 
         return list;
     }

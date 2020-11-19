@@ -2,13 +2,13 @@ package com.hsh.Helper;
 
 import com.hsh.config.ConfigurationManager;
 import com.hsh.source.Constants;
-import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.*;
 import org.apache.hadoop.hbase.client.Admin;
 import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.io.compress.Compression;
+import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -22,7 +22,7 @@ import java.util.LinkedList;
  * @author hsh
  * @create 2020年11月17日
  */
-//@Configuration
+@Configuration
 public class HbaseConnectionHelper {
 
 
@@ -53,7 +53,7 @@ public class HbaseConnectionHelper {
 
     }
 
-    public synchronized static Connection getConnection(){
+    public synchronized Connection getConnection(){
         if(connections.size() < 0){
             for(int i = 0; i < 10; i++){
                 try {
@@ -67,7 +67,7 @@ public class HbaseConnectionHelper {
         return connections.remove();
     }
 
-    public synchronized static void close(Connection connection){
+    public synchronized void close(Connection connection){
         if(connections.size() < 100){
             connections.add(connection);
         }else {
