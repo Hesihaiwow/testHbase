@@ -54,6 +54,16 @@ public class HbaseConnectionHelper {
     }
 
     public synchronized static Connection getConnection(){
+        if(connections.size() < 0){
+            for(int i = 0; i < 10; i++){
+                try {
+                    Connection connection = ConnectionFactory.createConnection(conf);
+                    connections.add(connection);
+                } catch (IOException e) {
+                    throw new RuntimeException("创建连接失败");
+                }
+            }
+        }
         return connections.remove();
     }
 
