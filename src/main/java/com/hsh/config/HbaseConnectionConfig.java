@@ -1,4 +1,4 @@
-package com.hsh.Helper;
+package com.hsh.config;
 
 import com.hsh.config.ConfigurationManager;
 import com.hsh.source.Constants;
@@ -8,6 +8,7 @@ import org.apache.hadoop.hbase.client.Connection;
 import org.apache.hadoop.hbase.client.ConnectionFactory;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.io.compress.Compression;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
@@ -23,7 +24,7 @@ import java.util.LinkedList;
  * @create 2020年11月17日
  */
 @Configuration
-public class HbaseConnectionHelper {
+public class HbaseConnectionConfig {
 
 
     private static org.apache.hadoop.conf.Configuration conf;
@@ -78,6 +79,13 @@ public class HbaseConnectionHelper {
             }
         }
 
+    }
+
+
+    @Bean
+    public HbaseConnectionConfig getHbaseConnectionHelper(){
+        HbaseConnectionConfig hbaseConnectionConfig = new HbaseConnectionConfig();
+        return hbaseConnectionConfig;
     }
 
 

@@ -2,7 +2,7 @@ package com.hsh.service.impl;
 
 import com.google.common.collect.Lists;
 import com.hsh.config.ConfigurationManager;
-import com.hsh.Helper.HbaseConnectionHelper;
+import com.hsh.config.HbaseConnectionConfig;
 import com.hsh.model.dto.HbaseResDTO;
 import com.hsh.service.IHbaseService;
 import com.hsh.source.Constants;
@@ -28,12 +28,12 @@ public class HbaseServiceImpl implements IHbaseService {
 
     @Autowired
     @Qualifier(value = "getHbaseConnectionHelper")
-    private HbaseConnectionHelper hbaseConnectionHelper;
+    private HbaseConnectionConfig hbaseConnectionConfig;
 
     @Override
     public HbaseResDTO getByRowkey(String rowKey)  {
 
-       Connection connection = hbaseConnectionHelper.getConnection();
+       Connection connection = hbaseConnectionConfig.getConnection();
 
         String tableName = ConfigurationManager.getProperty(Constants.HBASE_TABLE_NAME);
         String faimlyName = ConfigurationManager.getProperty(Constants.HBASE_FAMILY_NAME);
@@ -81,7 +81,7 @@ public class HbaseServiceImpl implements IHbaseService {
         } catch (IOException e) {
             throw new RuntimeException("表连接关闭失败");
         }
-        hbaseConnectionHelper.close(connection);
+        hbaseConnectionConfig.close(connection);
 
         return hbaseResDTO;
     }
@@ -89,7 +89,7 @@ public class HbaseServiceImpl implements IHbaseService {
     @Override
     public List<String> getColumns(String rowKey)  {
 
-        Connection connection = hbaseConnectionHelper.getConnection();
+        Connection connection = hbaseConnectionConfig.getConnection();
         Get get = new Get(Bytes.toBytes(rowKey));
 
         String tableName = ConfigurationManager.getProperty(Constants.HBASE_TABLE_NAME);
@@ -125,7 +125,7 @@ public class HbaseServiceImpl implements IHbaseService {
         } catch (IOException e) {
             throw new RuntimeException("表连接关闭失败");
         }
-        hbaseConnectionHelper.close(connection);
+        hbaseConnectionConfig.close(connection);
 
         return list;
     }
